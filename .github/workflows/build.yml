@@ -1,0 +1,32 @@
+name: Build KivyMD Android App
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Build with Buildozer
+        uses: ArtemSBulgakov/buildozer-action@v1
+        with:
+          command: buildozer android release
+          buildozer_version: stable
+
+      - name: Upload AAB File
+        uses: actions/upload-artifact@v4
+        with:
+          name: rc-controller-aab
+          path: bin/*.aab
+
+      - name: Upload APK File (if generated)
+        uses: actions/upload-artifact@v4
+        with:
+          name: rc-controller-apk
+          path: bin/*.apk
